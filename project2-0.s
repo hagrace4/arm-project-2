@@ -15,7 +15,7 @@ ldr r4,=MyFileHandle
 
 ldr r0,[r4] ;recall file handle from memory
 ldr r1,=MyString ;set r1 to the location in memory where string will be copied
-mov r2,#100 ;set number of chars to be read in operation
+mov r2,#200 ;set number of chars to be read in operation
 swi 0x6a ;read string
 bcs Exit
 
@@ -26,7 +26,7 @@ swi 0x68
 
 ldr r1,=MyString
 Loop0:
-ldrb r6,[r1] ; load first character from MyString into r3
+ldrb r6,[r1] ; load first character from MyString into r6
 
 ; Check and Replace Vowels
 ; 'a' -> 'A'
@@ -111,6 +111,7 @@ movEQ r6,#0x2a
 CMP r6,#0x7E ; '~' -> '*'
 movEQ r6,#0x2a
 
+
 strb r6,[r1]
 
 
@@ -122,13 +123,13 @@ b Loop0
 
 
 Output:
-; STDOUT: Print String
-;mov r0,#1 ;set file handle to stdout
-;ldr r1,=MyString
-;swi 0x69
+; Print String to STDOUT
+mov r0,#1 ;set file handle to stdout
+ldr r1,=MyString
+swi 0x69
 
 ; Open file for output
-swi 0x68 ; close 'input.txt' file
+swi 0x68              ; close 'input.txt' file
 ldr r0,=OutFileName   ; set Name for output file
 mov r1,#1             ; mode is output
 swi 0x66              ; open file for output
@@ -160,9 +161,8 @@ MyInteger: .skip 4
 Textfile: .asciz "input.txt"
 
 OutFileName: .asciz "output.txt"
-OutFileHandle:.word 0
+OutFileHandle: .word 0
 
-MyString: .skip 100 ; allocate room for 100 characters
-MyNewString: .skip 100 ; edite string
+MyString: .skip 200 ; allocate room for 100 characters
 
 exitStr: .asciz "File Failed to Open!!! ***Exiting Now***"
